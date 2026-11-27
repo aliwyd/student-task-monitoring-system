@@ -1,23 +1,35 @@
-export function validateCreateTask(input: any):
-  | { ok: true; data: any }
-  | { ok: false; errors: Record<string, string> } {
+import { PRIORITIES, Priority, TaskData, ValidationResult } from "./types";
+
+export const TITLE_MAX_LENGTH = 200;
+
+const isPriority = (v: unknown): v is Priority => PRIORITIES.includes(v as Priority);
+const optionalString = (v: unknown) => (typeof v === "string" ? v : undefined);
+
+export function validateCreateTask(input: Record<string, unknown> | null | undefined): ValidationResult<TaskData> {
+  const raw = input ?? {};
   const errors: Record<string, string> = {};
-  const title = typeof input?.title === "string" ? input.title.trim() : "";
+
+  const title = typeof raw.title === "string" ? raw.title.trim() : "";
   if (!title) errors.title = "Title is required";
-  else if (title.length > 200) errors.title = "Title must be at most 200 characters";
+  else if (title.length > TITLE_MAX_LENGTH) errors.title = `Title must be at most ${TITLE_MAX_LENGTH} characters`;
 
-  const priority = input?.priority ?? "MEDIUM";
-  if (!["LOW", "MEDIUM", "HIGH"].includes(priority)) errors.priority = "Invalid priority";
+  const priority = raw.priority ?? "MEDIUM";
+  if (!isPriority(priority)) errors.priority = "Invalid priority";
 
-  const due = input?.dueDate ? new Date(input.dueDate) : null;
-  if (!due || isNaN(due.getTime())) errors.dueDate = "A valid due date is required";
+  const dueDate = raw.dueDate ? new Date(raw.dueDate as string) : null;
+  if (!dueDate || isNaN(dueDate.getTime())) errors.dueDate = "A valid due date is required";
 
   if (Object.keys(errors).length) return { ok: false, errors };
   return {
     ok: true,
     data: {
-      title, priority, status: "PENDING", dueDate: due,
-      description: input.description, notes: input.notes, subjectId: input.subjectId,
+      title,
+      priority: priority as Priority,
+      status: "PENDING",
+      dueDate: dueDate as Date,
+      description: optionalString(raw.description),
+      notes: optionalString(raw.notes),
+      subjectId: typeof raw.subjectId === "number" ? raw.subjectId : undefined,
     },
   };
 }
