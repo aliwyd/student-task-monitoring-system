@@ -1,30 +1,32 @@
 # Project Progress
 
-Last updated: 2026-11-27 (sandbox session 1)
+Last updated: 2026-11-27 (sandbox session 2)
 
-## Done and verified (real runs, logs in `evidence/`)
-- Git repo, `.gitignore`, backend tooling (TypeScript, Vitest + v8 coverage)
-- Domain logic built with genuine TDD: task creation, status transitions, deadline/overdue, submission status, completion stats
-- 43 unit tests passing across 5 files; coverage 100% statements/lines/functions, 96.42% branches (`evidence/unit-tests/unit-coverage.log`)
-- `docs/testing/TDD_EVIDENCE.md` (generated from real logs and commits)
+## Done and verified (real runs; logs in `evidence/`)
+- Domain logic via genuine TDD (5 required features): 43 unit tests
+- REST API: auth (register/login/logout/me), tasks CRUD + filters/search/sort + status transitions, subjects CRUD, dashboard summary, user data isolation: 19 integration tests
+- Total 62 tests passing in the sandbox, **using in-memory repositories** (`evidence/integration-tests/sandbox-memory-all-tests.log`)
+- `tsc --noEmit` clean (note: Prisma types are stubs until `prisma generate`, so this does not check `prisma.ts`)
+
+## Written but NOT verified
+- `backend/prisma/schema.prisma`, `src/repositories/prisma.ts`, `src/server.ts`
+- `scripts/verify-on-windows.ps1` (could not run PowerShell here)
+- The same 19 API tests against real SQLite: pending, runs via the script above (`RUN_PRISMA=1`)
 
 ## Not started
-- Prisma schema/migrations (blocker: sandbox cannot reach binaries.prisma.sh; must be verified on your Windows machine)
-- Express API, auth, services, integration tests (need Prisma + a test DB)
-- React frontend (all 10 pages), Playwright e2e
-- Postman collection/environment, Newman run
+- Submissions API (`/api/submissions`) and `SubmissionRecord` usage, notifications API, reports API + CSV export
+- Profile/password change endpoints
+- React frontend (10 pages), Playwright e2e
+- Postman collection/environment (+ Newman run)
 - README, USER_MANUAL, TECHNICAL_DOCUMENTATION, ERD, screenshots
-- `scripts/verify-on-windows.ps1` (run migrations + integration + API tests and write evidence)
-- Final audit table, GitHub publishing (needs your approval and credentials)
+- Final audit table, GitHub publishing (needs your approval)
 
 ## Commands
 ```
-cd backend
-npm install
-npm test                 # unit tests
-npm run test:coverage    # unit tests + coverage
+cd backend && npm install && npm test          # works today, no database needed
+powershell -ExecutionPolicy Bypass -File scripts\verify-on-windows.ps1   # from project root: DB + Prisma test run
 ```
 
-## Blockers / caveats
-- Prisma engines cannot be downloaded in the build sandbox, so anything touching the database is unverified until run locally.
-- Git author is "Claude (AI-assisted)"; set your own `git config user.name/email` before committing further. Do not rewrite existing history.
+## Caveats
+- Git author on existing commits is "Claude (AI-assisted)". Set your own name/email for new commits; never rewrite history.
+- Reminders/notifications will be computed when the app is used (no background scheduler), as the spec allows.

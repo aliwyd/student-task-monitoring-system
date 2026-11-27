@@ -89,3 +89,25 @@ Commits:
 - `aa62068 tdd(stats): red - failing tests for completion statistics (module not implemented)`
 - `13b67ca tdd(stats): green - minimal computeTaskStats`
 - `9559434 tdd(stats): refactor - typed TaskStats, reuse isClosed, derived status map; behavior unchanged`
+
+## API: auth, tasks, subjects, user isolation, dashboard
+
+- Test file: `backend/tests/integration/api.test.ts` (19 tests; Supertest against the Express app)
+- Implementation: `backend/src/app.ts`, `backend/src/repositories/`, `backend/src/domain/taskUpdate.ts`
+
+**RED** - tests written first; `src/app` did not exist, so the suite failed to load. Log: `evidence/tdd/api-auth-tasks-red.log`
+
+**GREEN** - implementation added; 19 passed (19) on the first run. Log: `evidence/tdd/api-auth-tasks-green.log`
+
+**REFACTOR** - removed a leftover placeholder function; fixed a type mismatch (`null` vs `undefined`) that `tsc --noEmit` reported. 19 passed (19). Log: `evidence/tdd/api-auth-tasks-refactor.log`
+
+Caveats, stated plainly:
+- These tests ran against the **in-memory repositories**, not a real database. The same test file runs against Prisma/SQLite only when `RUN_PRISMA=1`, which `scripts/verify-on-windows.ps1` sets. That run has **not happened yet**.
+- The refactor commit also contains the Prisma schema, `prisma.ts` repositories and `server.ts`. Those are untested and were added without TDD cycles of their own.
+- The 19 tests passed on the first GREEN run; I did not intentionally break them to show a second failure.
+
+Commits:
+
+- `c9ce23a tdd(api-auth-tasks): red - failing integration tests for auth, tasks, subjects, isolation, dashboard (app not implemented)`
+- `5fab58b tdd(api-auth-tasks): green - implement repositories, validation, auth, tasks, subjects, dashboard routes`
+- `12433a4 tdd(api-auth-tasks): refactor - remove dead code; fix TaskData null types found by tsc; behavior unchanged`
