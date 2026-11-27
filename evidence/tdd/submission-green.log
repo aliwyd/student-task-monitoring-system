@@ -1,0 +1,13 @@
+# 2026-11-27T10:28:09Z feature=submission stage=green
+# cmd: npx vitest run tests/unit/submission.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ✓ tests/unit/submission.test.ts (7 tests) 10ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  10:28:09
+   Duration  203ms (transform 48%, import 24%, tests 19%, worker 8%)
+
+# exit code: 0
