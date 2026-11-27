@@ -1,0 +1,394 @@
+# 2026-11-27T10:52:50Z feature=api-part2 stage=red
+# cmd: npx vitest run tests/integration/api2.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ❯ tests/integration/api2.test.ts (22 tests | 22 failed) 429ms
+   ❯ API part 2 on memory repositories (22)
+     ❯ submissions (9)
+       × requires authentication 33ms
+       × refuses to submit a task that is not completed 41ms
+       × records an on-time submission and marks the task SUBMITTED 19ms
+       × flags late submissions with hours late 19ms
+       × rejects a second submission for the same task 12ms
+       × validates input and ownership 16ms
+       × lists every task with its submission state and a summary (completed != submitted) 21ms
+       × edits link and remarks of a submission; others cannot 19ms
+       × removes the submission record when its task is deleted 11ms
+     ❯ notifications (5)
+       × requires authentication and starts empty 3ms
+       × generates notifications from task data without duplicating them 17ms
+       × marks a notification as read and keeps it read 9ms
+       × rejects bad ids, unknown ids and other users' notifications 16ms
+       × drops an overdue notice once the task is completed and announces the completion 14ms
+     ❯ reports (4)
+       × requires authentication 3ms
+       × summarises tasks, submissions, subjects and weeks from stored data 26ms
+       × only reports the current user's data 27ms
+       × exports the user's tasks as CSV with injection protection 21ms
+     ❯ dashboard extras (1)
+       × includes weekly progress and recent activity 22ms
+     ❯ profile and password (3)
+       × requires authentication 19ms
+       × updates name and email, enforcing validity and uniqueness 36ms
+       × changes the password only with the correct current password 19ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 22 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > submissions > requires authentication
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/integration/api2.test.ts:30:67
+     28|   describe("submissions", () => {
+     29|     it("requires authentication", async () => {
+     30|       expect((await request(app).get("/api/submissions")).status).toBe…
+       |                                                                   ^
+     31|       expect((await request(app).post("/api/submissions").send({})).st…
+     32|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > submissions > refuses to submit a task that is not completed
+AssertionError: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/integration/api2.test.ts:37:24
+     35|       const task = await mkTask(t);
+     36|       const r = await submit(t, { taskId: task.id });
+     37|       expect(r.status).toBe(409);
+       |                        ^
+     38|       const after = await request(app).get(`/api/tasks/${task.id}`).se…
+     39|       expect(after.body.data.task.status).toBe("PENDING");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > submissions > records an on-time submission and marks the task SUBMITTED
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/integration/api2.test.ts:46:24
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > submissions > flags late submissions with hours late
+TypeError: Cannot read properties of undefined (reading 'submission')
+ ❯ tests/integration/api2.test.ts:56:26
+     54|       await setStatus(t, task.id, "COMPLETED");
+     55|       const r = await submit(t, { taskId: task.id });
+     56|       expect(r.body.data.submission).toMatchObject({ timing: "LATE", l…
+       |                          ^
+     57|     });
+     58|     it("rejects a second submission for the same task", async () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > submissions > rejects a second submission for the same task
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/integration/api2.test.ts:62:61
+     60|       const task = await mkTask(t);
+     61|       await setStatus(t, task.id, "COMPLETED");
+     62|       expect((await submit(t, { taskId: task.id })).status).toBe(201);
+       |                                                             ^
+     63|       expect((await submit(t, { taskId: task.id })).status).toBe(409);
+     64|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > submissions > validates input and ownership
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/integration/api2.test.ts:69:44
+     67|       const task = await mkTask(a);
+     68|       await setStatus(a, task.id, "COMPLETED");
+     69|       expect((await submit(a, {})).status).toBe(400);
+       |                                            ^
+     70|       expect((await submit(a, { taskId: task.id, link: "javascript:ale…
+     71|       expect((await submit(a, { taskId: task.id, link: "not a url" }))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > submissions > lists every task with its submission state and a summary (completed != submitted)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/integration/api2.test.ts:84:24
+     82|       await setStatus(t, completedOnly.id, "COMPLETED");
+     83|       const r = await request(app).get("/api/submissions").set(auth(t)…
+     84|       expect(r.status).toBe(200);
+       |                        ^
+     85|       expect(r.body.data.summary).toEqual({ submitted: 1, onTime: 1, l…
+     86|       const by = Object.fromEntries(r.body.data.items.map((i: any) => …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > submissions > edits link and remarks of a submission; others cannot
+TypeError: Cannot read properties of undefined (reading 'submission')
+ ❯ tests/integration/api2.test.ts:94:67
+     92|       const a = await signup("a@example.com"); const b = await signup(…
+     93|       const task = await mkTask(a); await setStatus(a, task.id, "COMPL…
+     94|       const id = (await submit(a, { taskId: task.id })).body.data.subm…
+       |                                                                   ^
+     95|       const r = await request(app).put(`/api/submissions/${id}`).set(a…
+     96|       expect(r.status).toBe(200);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > submissions > removes the submission record when its task is deleted
+TypeError: Cannot read properties of undefined (reading 'submission')
+ ❯ tests/integration/api2.test.ts:105:67
+    103|       const t = await signup();
+    104|       const task = await mkTask(t); await setStatus(t, task.id, "COMPL…
+    105|       const id = (await submit(t, { taskId: task.id })).body.data.subm…
+       |                                                                   ^
+    106|       await request(app).delete(`/api/tasks/${task.id}`).set(auth(t));
+    107|       expect((await request(app).get("/api/submissions").set(auth(t)))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > notifications > requires authentication and starts empty
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/integration/api2.test.ts:114:69
+    112|   describe("notifications", () => {
+    113|     it("requires authentication and starts empty", async () => {
+    114|       expect((await request(app).get("/api/notifications")).status).to…
+       |                                                                     ^
+    115|       const t = await signup();
+    116|       const r = await request(app).get("/api/notifications").set(auth(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > notifications > generates notifications from task data without duplicating them
+TypeError: Cannot read properties of undefined (reading 'notifications')
+ ❯ tests/integration/api2.test.ts:127:37
+    125|       await setStatus(t, done.id, "COMPLETED");
+    126|       const first = await request(app).get("/api/notifications").set(a…
+    127|       const types = first.body.data.notifications.map((n: any) => n.ty…
+       |                                     ^
+    128|       expect(types).toEqual(["DEADLINE_SOON", "OVERDUE", "RECENTLY_COM…
+    129|       expect(first.body.data.unreadCount).toBe(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > notifications > marks a notification as read and keeps it read
+TypeError: Cannot read properties of undefined (reading 'notifications')
+ ❯ tests/integration/api2.test.ts:136:87
+    134|       const t = await signup();
+    135|       await mkTask(t, { dueDate: "2026-12-01T00:00:00.000Z" });
+    136|       const n = (await request(app).get("/api/notifications").set(auth…
+       |                                                                                       ^
+    137|       const r = await request(app).patch(`/api/notifications/${n.id}/r…
+    138|       expect(r.status).toBe(200);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > notifications > rejects bad ids, unknown ids and other users' notifications
+TypeError: Cannot read properties of undefined (reading 'notifications')
+ ❯ tests/integration/api2.test.ts:148:87
+    146|       const a = await signup("a@example.com"); const b = await signup(…
+    147|       await mkTask(a, { dueDate: "2026-12-01T00:00:00.000Z" });
+    148|       const n = (await request(app).get("/api/notifications").set(auth…
+       |                                                                                       ^
+    149|       expect((await request(app).patch("/api/notifications/abc/read").…
+    150|       expect((await request(app).patch("/api/notifications/9999/read")…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > notifications > drops an overdue notice once the task is completed and announces the completion
+TypeError: Cannot read properties of undefined (reading 'notifications')
+ ❯ tests/integration/api2.test.ts:159:91
+    157|       await request(app).get("/api/notifications").set(auth(t));
+    158|       await setStatus(t, task.id, "COMPLETED");
+    159|       const types = (await request(app).get("/api/notifications").set(…
+       |                                                                                           ^
+    160|       expect(types).toEqual(["RECENTLY_COMPLETED"]);
+    161|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > reports > requires authentication
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/integration/api2.test.ts:174:71
+    172|     };
+    173|     it("requires authentication", async () => {
+    174|       expect((await request(app).get("/api/reports/summary")).status).…
+       |                                                                       ^
+    175|       expect((await request(app).get("/api/reports/export.csv")).statu…
+    176|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > reports > summarises tasks, submissions, subjects and weeks from stored data
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/integration/api2.test.ts:182:24
+    180|       await submit(t, { taskId: a.id });
+    181|       const r = await request(app).get("/api/reports/summary").set(aut…
+    182|       expect(r.status).toBe(200);
+       |                        ^
+    183|       const d = r.body.data;
+    184|       expect(d.stats).toMatchObject({ total: 3, completed: 1, overdue:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > reports > only reports the current user's data
+TypeError: Cannot read properties of undefined (reading 'stats')
+ ❯ tests/integration/api2.test.ts:197:26
+    195|       await seed(a);
+    196|       const r = await request(app).get("/api/reports/summary").set(aut…
+    197|       expect(r.body.data.stats.total).toBe(0);
+       |                          ^
+    198|       expect(r.body.data.bySubject).toEqual([]);
+    199|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > reports > exports the user's tasks as CSV with injection protection
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/integration/api2.test.ts:206:24
+    204|       await mkTask(b, { title: "Bob private" });
+    205|       const r = await request(app).get("/api/reports/export.csv").set(…
+    206|       expect(r.status).toBe(200);
+       |                        ^
+    207|       expect(r.headers["content-type"]).toMatch(/text\/csv/);
+    208|       expect(r.headers["content-disposition"]).toMatch(/attachment; fi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > dashboard extras > includes weekly progress and recent activity
+AssertionError: Target cannot be null or undefined.
+ ❯ tests/integration/api2.test.ts:223:42
+    221|       await setStatus(t, task.id, "COMPLETED");
+    222|       const r = await request(app).get("/api/dashboard/summary").set(a…
+    223|       expect(r.body.data.weeklyProgress).toHaveLength(8);
+       |                                          ^
+    224|       expect(r.body.data.recentActivity.map((e: any) => e.type).sort()…
+    225|       expect(r.body.data.recentActivity[0]).toMatchObject({ taskId: ta…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > profile and password > requires authentication
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/integration/api2.test.ts:231:83
+    229|   describe("profile and password", () => {
+    230|     it("requires authentication", async () => {
+    231|       expect((await request(app).put("/api/auth/me").send({ name: "x" …
+       |                                                                                   ^
+    232|       expect((await request(app).put("/api/auth/password").send({})).s…
+    233|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > profile and password > updates name and email, enforcing validity and uniqueness
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/integration/api2.test.ts:237:24
+    235|       const t = await signup("a@example.com"); await signup("b@example…
+    236|       const r = await request(app).put("/api/auth/me").set(auth(t)).se…
+    237|       expect(r.status).toBe(200);
+       |                        ^
+    238|       expect(r.body.data.user).toMatchObject({ name: "Alice Smith", em…
+    239|       expect(JSON.stringify(r.body)).not.toMatch(/passwordHash/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/22]⎯
+
+ FAIL  tests/integration/api2.test.ts > API part 2 on memory repositories > profile and password > changes the password only with the correct current password
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/integration/api2.test.ts:249:28
+    247|       const t = await signup("a@example.com");
+    248|       const wrong = await request(app).put("/api/auth/password").set(a…
+    249|       expect(wrong.status).toBe(400);
+       |                            ^
+    250|       expect(wrong.body.error.details.currentPassword).toBeDefined();
+    251|       const weak = await request(app).put("/api/auth/password").set(au…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/22]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  22 failed (22)
+   Start at  10:52:50
+   Duration  998ms (tests 51%, import 33%, transform 15%)
+
+# exit code: 1
