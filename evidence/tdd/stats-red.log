@@ -1,0 +1,27 @@
+# 2026-11-27T10:28:22Z feature=stats stage=red
+# cmd: npx vitest run tests/unit/stats.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ❯ tests/unit/stats.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/stats.test.ts [ tests/unit/stats.test.ts ]
+Error: Cannot find module '../../src/domain/stats' imported from /home/claude/student-task-monitoring-system/backend/tests/unit/stats.test.ts
+ ❯ tests/unit/stats.test.ts:2:1
+      1| import { describe, it, expect } from "vitest";
+      2| import { computeTaskStats } from "../../src/domain/stats";
+       | ^
+      3|
+      4| const now = new Date("2026-12-10T12:00:00.000Z");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  10:28:23
+   Duration  265ms (worker 95%, environment 5%)
+
+# exit code: 1
