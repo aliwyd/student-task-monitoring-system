@@ -1,0 +1,13 @@
+# 2026-11-27T10:51:39Z feature=notifications-domain stage=refactor
+# cmd: npx vitest run tests/unit/notificationsDomain.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ✓ tests/unit/notificationsDomain.test.ts (8 tests) 10ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  10:51:39
+   Duration  212ms (transform 53%, import 23%, tests 17%, worker 6%)
+
+# exit code: 0
