@@ -12,6 +12,10 @@ export function createPrismaRepos(prisma: PrismaClient): Repos {
       create: (d) => prisma.user.create({ data: d }),
       findByEmail: (email) => prisma.user.findUnique({ where: { email } }),
       findById: (id) => prisma.user.findUnique({ where: { id } }),
+      async update(id, d) {
+        const r = await prisma.user.updateMany({ where: { id }, data: clean(d) });
+        return r.count ? prisma.user.findUnique({ where: { id } }) : null;
+      },
     },
     subjects: {
       create: (userId, d) => prisma.subject.create({ data: { ...d, userId } }) as Promise<Subject>,
@@ -42,6 +46,24 @@ export function createPrismaRepos(prisma: PrismaClient): Repos {
         return toTask(await prisma.task.findFirst({ where: { id, userId } }));
       },
       async delete(userId, id) { return (await prisma.task.deleteMany({ where: { id, userId } })).count > 0; },
+    },
+    submissions: {
+      create: (userId, d) => prisma.submissionRecord.create({ data: { ...d, userId } }),
+      list: (userId) => prisma.submissionRecord.findMany({ where: { userId }, orderBy: { id: "asc" } }),
+      get: (userId, id) => prisma.submissionRecord.findFirst({ where: { id, userId } }),
+      getByTask: (userId, taskId) => prisma.submissionRecord.findFirst({ where: { userId, taskId } }),
+      async update(userId, id, d) {
+        const r = await prisma.submissionRecord.updateMany({ where: { id, userId }, data: clean(d) });
+        return r.count ? prisma.submissionRecord.findFirst({ where: { id, userId } }) : null;
+      },
+    },
+    notifications: {
+      list: (userId) => prisma.notification.findMany({ where: { userId }, orderBy: { id: "asc" } }),
+      create: (userId, d) => prisma.notification.create({ data: { ...d, userId } }),
+      async markRead(userId, id) {
+        const r = await prisma.notification.updateMany({ where: { id, userId }, data: { read: true } });
+        return r.count ? prisma.notification.findFirst({ where: { id, userId } }) : null;
+      },
     },
   };
 }

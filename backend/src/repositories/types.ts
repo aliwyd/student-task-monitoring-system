@@ -9,9 +9,12 @@ export interface Task {
   completedAt: Date | null; submittedAt: Date | null; createdAt: Date; updatedAt: Date;
 }
 
+export interface SubmissionRecord { id: number; userId: number; taskId: number; submittedAt: Date; link: string | null; remarks: string | null; createdAt: Date }
+export interface Notification { id: number; userId: number; taskId: number | null; type: string; message: string; read: boolean; createdAt: Date }
+
 export type NewTask = {
   title: string; priority: Priority; status: TaskStatus; dueDate: Date;
-  description?: string | null; notes?: string | null; subjectId?: number | null;
+  description?: string | null; notes?: string | null; subjectId?: number | null; createdAt?: Date;
 };
 export type TaskPatch = Partial<Omit<Task, "id" | "userId" | "createdAt" | "updatedAt">>;
 export interface TaskFilters { status?: TaskStatus; priority?: Priority; subjectId?: number; search?: string; sort?: "dueDate" | "-dueDate" }
@@ -22,6 +25,7 @@ export interface UserRepo {
   create(d: { email: string; name: string; passwordHash: string }): Promise<User>;
   findByEmail(email: string): Promise<User | null>;
   findById(id: number): Promise<User | null>;
+  update(id: number, d: Partial<Pick<User, "name" | "email" | "passwordHash">>): Promise<User | null>;
 }
 export interface SubjectRepo {
   create(userId: number, d: SubjectInput): Promise<Subject>;
@@ -38,4 +42,16 @@ export interface TaskRepo {
   update(userId: number, id: number, p: TaskPatch): Promise<Task | null>;
   delete(userId: number, id: number): Promise<boolean>;
 }
-export interface Repos { users: UserRepo; subjects: SubjectRepo; tasks: TaskRepo }
+export interface SubmissionRepo {
+  create(userId: number, d: { taskId: number; submittedAt: Date; link?: string | null; remarks?: string | null }): Promise<SubmissionRecord>;
+  list(userId: number): Promise<SubmissionRecord[]>;
+  get(userId: number, id: number): Promise<SubmissionRecord | null>;
+  getByTask(userId: number, taskId: number): Promise<SubmissionRecord | null>;
+  update(userId: number, id: number, d: { link?: string | null; remarks?: string | null }): Promise<SubmissionRecord | null>;
+}
+export interface NotificationRepo {
+  list(userId: number): Promise<Notification[]>;
+  create(userId: number, d: { taskId: number; type: string; message: string; createdAt: Date }): Promise<Notification>;
+  markRead(userId: number, id: number): Promise<Notification | null>;
+}
+export interface Repos { users: UserRepo; subjects: SubjectRepo; tasks: TaskRepo; submissions: SubmissionRepo; notifications: NotificationRepo }

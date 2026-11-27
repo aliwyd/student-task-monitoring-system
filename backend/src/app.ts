@@ -15,10 +15,11 @@ import { PRIORITIES, Priority, STATUSES, TaskStatus } from "./domain/types";
 
 export interface AppOptions { repos: Repos; jwtSecret: string; now?: () => Date; bcryptRounds?: number; corsOrigin?: string }
 
-class HttpError extends Error {
-  constructor(public status: number, message: string, public details?: Record<string, string>) { super(message); }
-}
-const fail = (status: number, message: string, details?: Record<string, string>) => new HttpError(status, message, details);
+import { HttpError, fail, Ctx } from "./http/common";
+import { submissionsRouter } from "./http/submissions";
+import { notificationsRouter } from "./http/notifications";
+import { reportsRouter } from "./http/reports";
+import { computeWeeklyProgress, recentActivity } from "./domain/reports";
 const ok = (res: Response, data: unknown, status = 200) => res.status(status).json({ success: true, data });
 const wrap = (fn: (req: Request, res: Response) => Promise<unknown>) => (req: Request, res: Response, next: NextFunction) => { fn(req, res).catch(next); };
 
@@ -78,6 +79,25 @@ export function createApp(opts: AppOptions) {
   }));
   auth.post("/logout", (_req, res) => { res.clearCookie("token", cookieOpts); ok(res, { message: "Logged out" }); });
   auth.get("/me", authenticate, (req, res) => { ok(res, { user: publicUser(me(req)) }); });
+  auth.put("/me", authenticate, wrap(async (req, res) => {
+    const b = req.body ?? {}; const errors: Record<string, string> = {}; const patch: { name?: string; email?: string } = {};
+    if ("name" in b) { if (typeof b.name === "string" && b.name.trim() && b.name.trim().length <= 100) patch.name = b.name.trim(); else errors.name = "Name is required (max 100 characters)"; }
+    if ("email" in b) { if (typeof b.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email) && b.email.length <= 254) patch.email = b.email.trim().toLowerCase(); else errors.email = "A valid email is required"; }
+    if (Object.keys(errors).length) throw fail(400, "Validation failed", errors);
+    if (patch.email) { const other = await repos.users.findByEmail(patch.email); if (other && other.id !== me(req).id) throw fail(409, "An account with this email already exists"); }
+    const updated = await repos.users.update(me(req).id, patch);
+    if (!updated) throw fail(401, "Invalid or expired token");
+    ok(res, { user: publicUser(updated) });
+  }));
+  auth.put("/password", authenticate, wrap(async (req, res) => {
+    const { currentPassword, newPassword } = req.body ?? {}; const errors: Record<string, string> = {};
+    if (typeof currentPassword !== "string" || !(await bcrypt.compare(currentPassword, me(req).passwordHash))) errors.currentPassword = "Current password is incorrect";
+    if (typeof newPassword !== "string" || newPassword.length < 8 || newPassword.length > 72 || !/[A-Za-z]/.test(newPassword) || !/\d/.test(newPassword))
+      errors.newPassword = "Password must be 8-72 characters and contain a letter and a number";
+    if (Object.keys(errors).length) throw fail(400, "Validation failed", errors);
+    await repos.users.update(me(req).id, { passwordHash: await bcrypt.hash(newPassword, rounds) });
+    ok(res, { message: "Password changed" });
+  }));
   app.use("/api/auth", auth);
 
   // ---------- subjects ----------
@@ -134,7 +154,7 @@ export function createApp(opts: AppOptions) {
     const v = validateCreateTask(req.body);
     if (!v.ok) throw fail(400, "Validation failed", v.errors);
     await assertSubject(me(req).id, v.data.subjectId);
-    ok(res, { task: taskDto(await repos.tasks.create(me(req).id, v.data)) }, 201);
+    ok(res, { task: taskDto(await repos.tasks.create(me(req).id, { ...v.data, createdAt: now() })) }, 201);
   }));
   tasks.get("/:id", wrap(async (req, res) => {
     const t = await repos.tasks.get(me(req).id, idParam(req));
@@ -169,8 +189,13 @@ export function createApp(opts: AppOptions) {
   app.get("/api/dashboard/summary", authenticate, wrap(async (req, res) => {
     const all = await repos.tasks.list(me(req).id, { sort: "dueDate" });
     const upcoming = all.filter((t) => !isClosed(t.status) && !isOverdue(t, now())).slice(0, 5).map(taskDto);
-    ok(res, { stats: computeTaskStats(all, now()), upcoming });
+    ok(res, { stats: computeTaskStats(all, now()), upcoming, weeklyProgress: computeWeeklyProgress(all, now()), recentActivity: recentActivity(all, 10) });
   }));
+
+  const ctx: Ctx = { repos, now, authenticate };
+  app.use("/api/submissions", submissionsRouter(ctx));
+  app.use("/api/notifications", notificationsRouter(ctx));
+  app.use("/api/reports", reportsRouter(ctx));
 
   // ---------- errors ----------
   app.use("/api", (_req, _res, next) => next(fail(404, "Route not found")));
