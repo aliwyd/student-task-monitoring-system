@@ -1,0 +1,32 @@
+# 2026-11-27T10:28:32Z cmd: npx vitest run --coverage
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+      Coverage enabled with v8
+
+ ✓ tests/unit/statusUpdate.test.ts (9 tests) 6ms
+ ✓ tests/unit/taskCreation.test.ts (8 tests) 7ms
+ ✓ tests/unit/deadlines.test.ts (12 tests) 5ms
+ ✓ tests/unit/submission.test.ts (7 tests) 6ms
+ ✓ tests/unit/stats.test.ts (7 tests) 8ms
+
+ Test Files  5 passed (5)
+      Tests  43 passed (43)
+   Start at  10:28:33
+   Duration  987ms (import 40%, worker 39%, tests 14%, transform 7%)
+
+    Isolate  5 workers spawned · ~118ms startup each (spawn + environment, per file)
+             at least ~474ms faster with isolate: false — reuses workers across files instead of one per file
+
+ % Coverage report from v8
+-----------------|---------|----------|---------|---------|-------------------
+File             | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------|---------|----------|---------|---------|-------------------
+All files        |     100 |    96.42 |     100 |     100 |                   
+ deadlines.ts    |     100 |      100 |     100 |     100 |                   
+ stats.ts        |     100 |      100 |     100 |     100 |                   
+ statusUpdate.ts |     100 |      100 |     100 |     100 |                   
+ submission.ts   |     100 |      100 |     100 |     100 |                   
+ taskCreation.ts |     100 |    91.66 |     100 |     100 | 9-12              
+ types.ts        |     100 |      100 |     100 |     100 |                   
+-----------------|---------|----------|---------|---------|-------------------
+# exit code: 0
