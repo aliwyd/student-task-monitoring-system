@@ -1,0 +1,27 @@
+# 2026-11-27T10:52:14Z feature=csv-export stage=red
+# cmd: npx vitest run tests/unit/csv.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ❯ tests/unit/csv.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/csv.test.ts [ tests/unit/csv.test.ts ]
+Error: Cannot find module '../../src/domain/csv' imported from /home/claude/student-task-monitoring-system/backend/tests/unit/csv.test.ts
+ ❯ tests/unit/csv.test.ts:2:1
+      1| import { describe, it, expect } from "vitest";
+      2| import { toCsv } from "../../src/domain/csv";
+       | ^
+      3|
+      4| describe("toCsv", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  10:52:15
+   Duration  245ms (worker 95%, environment 5%)
+
+# exit code: 1
