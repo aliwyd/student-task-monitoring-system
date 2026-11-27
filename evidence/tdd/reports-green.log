@@ -1,0 +1,13 @@
+# 2026-11-27T10:51:59Z feature=reports stage=green
+# cmd: npx vitest run tests/unit/reports.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ✓ tests/unit/reports.test.ts (12 tests) 9ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  10:52:00
+   Duration  202ms (transform 54%, import 24%, tests 16%, worker 6%)
+
+# exit code: 0
