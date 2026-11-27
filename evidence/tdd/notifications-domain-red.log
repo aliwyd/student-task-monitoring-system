@@ -1,0 +1,27 @@
+# 2026-11-27T10:51:37Z feature=notifications-domain stage=red
+# cmd: npx vitest run tests/unit/notificationsDomain.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ❯ tests/unit/notificationsDomain.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/notificationsDomain.test.ts [ tests/unit/notificationsDomain.test.ts ]
+Error: Cannot find module '../../src/domain/notifications' imported from /home/claude/student-task-monitoring-system/backend/tests/unit/notificationsDomain.test.ts
+ ❯ tests/unit/notificationsDomain.test.ts:2:1
+      1| import { describe, it, expect } from "vitest";
+      2| import { candidateNotifications } from "../../src/domain/notifications…
+       | ^
+      3|
+      4| const now = new Date("2026-12-10T12:00:00.000Z");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  10:51:38
+   Duration  210ms (worker 97%, environment 3%)
+
+# exit code: 1
