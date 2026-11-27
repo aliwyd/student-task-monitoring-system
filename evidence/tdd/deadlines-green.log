@@ -1,0 +1,13 @@
+# 2026-11-27T10:27:53Z feature=deadlines stage=green
+# cmd: npx vitest run tests/unit/deadlines.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ✓ tests/unit/deadlines.test.ts (12 tests) 13ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  10:27:53
+   Duration  275ms (transform 38%, import 34%, tests 19%, worker 8%)
+
+# exit code: 0
