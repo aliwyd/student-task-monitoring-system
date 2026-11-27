@@ -1,0 +1,27 @@
+# 2026-11-27T10:27:37Z feature=status-update stage=red
+# cmd: npx vitest run tests/unit/statusUpdate.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ❯ tests/unit/statusUpdate.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/statusUpdate.test.ts [ tests/unit/statusUpdate.test.ts ]
+Error: Cannot find module '../../src/domain/statusUpdate' imported from /home/claude/student-task-monitoring-system/backend/tests/unit/statusUpdate.test.ts
+ ❯ tests/unit/statusUpdate.test.ts:2:1
+      1| import { describe, it, expect } from "vitest";
+      2| import { applyStatusChange } from "../../src/domain/statusUpdate";
+       | ^
+      3| import type { TaskData } from "../../src/domain/types";
+      4|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  10:27:38
+   Duration  228ms (worker 97%, environment 3%)
+
+# exit code: 1
