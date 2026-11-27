@@ -1,0 +1,13 @@
+# 2026-11-27T10:52:13Z feature=reports stage=refactor
+# cmd: npx vitest run tests/unit/reports.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ✓ tests/unit/reports.test.ts (12 tests) 11ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  10:52:14
+   Duration  211ms (transform 52%, import 22%, tests 19%, worker 6%)
+
+# exit code: 0
