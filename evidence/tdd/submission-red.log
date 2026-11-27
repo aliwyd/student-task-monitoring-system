@@ -1,0 +1,27 @@
+# 2026-11-27T10:28:08Z feature=submission stage=red
+# cmd: npx vitest run tests/unit/submission.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ❯ tests/unit/submission.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/submission.test.ts [ tests/unit/submission.test.ts ]
+Error: Cannot find module '../../src/domain/submission' imported from /home/claude/student-task-monitoring-system/backend/tests/unit/submission.test.ts
+ ❯ tests/unit/submission.test.ts:2:1
+      1| import { describe, it, expect } from "vitest";
+      2| import { evaluateSubmission, submissionStatus } from "../../src/domain…
+       | ^
+      3|
+      4| const due = new Date("2026-12-10T12:00:00.000Z");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  10:28:09
+   Duration  214ms (worker 96%, environment 4%)
+
+# exit code: 1
