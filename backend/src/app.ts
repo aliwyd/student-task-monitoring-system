@@ -40,7 +40,6 @@ export function createApp(opts: AppOptions) {
   const cookieOpts = { httpOnly: true, sameSite: "lax" as const, secure: process.env.NODE_ENV === "production", maxAge: 7 * 86400_000 };
   const issue = (res: Response, u: User) => { const token = jwt.sign({ sub: u.id }, jwtSecret, { expiresIn: "7d" }); res.cookie("token", token, cookieOpts); return token; };
 
-  const requireAuth = wrap(async (req, res) => { /* replaced below */ });
   const authenticate = async (req: Request, _res: Response, next: NextFunction) => {
     try {
       const h = req.headers.authorization;
@@ -53,7 +52,6 @@ export function createApp(opts: AppOptions) {
       (req as any).user = user; next();
     } catch (e) { next(e); }
   };
-  void requireAuth;
   const me = (req: Request) => (req as any).user as User;
 
   // ---------- auth ----------

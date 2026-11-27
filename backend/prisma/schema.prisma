@@ -1,0 +1,91 @@
+// SQLite + Prisma. Priority/status are plain strings validated in the application (src/domain/types.ts).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int              @id @default(autoincrement())
+  email         String           @unique
+  name          String
+  passwordHash  String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  subjects      Subject[]
+  tasks         Task[]
+  submissions   SubmissionRecord[]
+  notifications Notification[]
+}
+
+model Subject {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  name        String
+  code        String?
+  description String?
+  color       String   @default("#3B82F6")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Task {
+  id           Int               @id @default(autoincrement())
+  userId       Int
+  subjectId    Int?
+  title        String
+  description  String?
+  notes        String?
+  priority     String            @default("MEDIUM")
+  status       String            @default("PENDING")
+  dueDate      DateTime
+  completedAt  DateTime?
+  submittedAt  DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject      Subject?          @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  submission   SubmissionRecord?
+  notifications Notification[]
+
+  @@index([userId, status])
+  @@index([userId, dueDate])
+  @@index([subjectId])
+}
+
+// Submission details for a task (no real LMS integration): link and remarks.
+model SubmissionRecord {
+  id          Int      @id @default(autoincrement())
+  taskId      Int      @unique
+  userId      Int
+  submittedAt DateTime
+  link        String?
+  remarks     String?
+  createdAt   DateTime @default(now())
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  taskId    Int?
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task      Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+}

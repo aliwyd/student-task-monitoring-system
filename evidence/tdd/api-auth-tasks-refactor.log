@@ -1,0 +1,13 @@
+# 2026-11-27T10:41:10Z feature=api-auth-tasks stage=refactor
+# cmd: npx vitest run tests/integration/api.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ✓ tests/integration/api.test.ts (19 tests) 369ms
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  10:41:11
+   Duration  925ms (tests 50%, import 31%, transform 19%)
+
+# exit code: 0

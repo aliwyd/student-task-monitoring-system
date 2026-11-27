@@ -5,9 +5,9 @@ export type TaskStatus = (typeof STATUSES)[number];
 
 export interface TaskData {
   title: string;
-  description?: string;
-  notes?: string;
-  subjectId?: number;
+  description?: string | null;
+  notes?: string | null;
+  subjectId?: number | null;
   priority: Priority;
   status: TaskStatus;
   dueDate: Date;
