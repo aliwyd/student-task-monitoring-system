@@ -1,0 +1,28 @@
+# 2026-11-27T10:40:00Z feature=api-auth-tasks stage=red
+# cmd: npx vitest run tests/integration/api.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ❯ tests/integration/api.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/api.test.ts [ tests/integration/api.test.ts ]
+Error: Cannot find module '../../src/app' imported from /home/claude/student-task-monitoring-system/backend/tests/integration/api.test.ts
+ ❯ tests/integration/api.test.ts:4:1
+      2| import request from "supertest";
+      3| import type { Express } from "express";
+      4| import { createApp } from "../../src/app";
+       | ^
+      5| import { backends } from "../helpers/repos";
+      6|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  10:40:01
+   Duration  817ms (worker 96%, environment 4%)
+
+# exit code: 1
