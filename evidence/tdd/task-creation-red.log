@@ -1,0 +1,27 @@
+# 2026-11-27T10:27:03Z feature=task-creation stage=red
+# cmd: npx vitest run tests/unit/taskCreation.test.ts
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.2 [39m[90m/home/claude/student-task-monitoring-system/backend[39m
+
+ [31m❯[39m tests/unit/taskCreation.test.ts [2m([22m[2m0 test[22m[2m)[22m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Suites 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/unit/taskCreation.test.ts[2m [ tests/unit/taskCreation.test.ts ][22m
+[31m[1mError[22m: Cannot find module '../../src/domain/taskCreation' imported from /home/claude/student-task-monitoring-system/backend/tests/unit/taskCreation.test.ts[39m
+[36m [2m❯[22m tests/unit/taskCreation.test.ts:[2m2:1[22m[39m
+    [90m  1|[39m [35mimport[39m { describe[33m,[39m it[33m,[39m expect } [35mfrom[39m [32m"vitest"[39m[33m;[39m
+    [90m  2|[39m [35mimport[39m { validateCreateTask } [35mfrom[39m [32m"../../src/domain/taskCreation"[39m[33m;[39m
+    [90m   |[39m [31m^[39m
+    [90m  3|[39m
+    [90m  4|[39m [34mdescribe[39m([32m"validateCreateTask"[39m[33m,[39m () [33m=>[39m {
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 10:27:07
+[2m   Duration [22m 415ms[2m (worker 97%, environment 3%)[22m
+
+# exit code: 1
