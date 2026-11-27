@@ -8,20 +8,17 @@ import type { Repos, Subject, Task, TaskFilters, User } from "./repositories/typ
 import { validateCreateTask } from "./domain/taskCreation";
 import { validateUpdateTask } from "./domain/taskUpdate";
 import { applyStatusChange } from "./domain/statusUpdate";
-import { deadlineState, daysUntilDue, isClosed, isOverdue } from "./domain/deadlines";
-import { submissionStatus } from "./domain/submission";
+import { isClosed, isOverdue } from "./domain/deadlines";
 import { computeTaskStats } from "./domain/stats";
 import { PRIORITIES, Priority, STATUSES, TaskStatus } from "./domain/types";
 
 export interface AppOptions { repos: Repos; jwtSecret: string; now?: () => Date; bcryptRounds?: number; corsOrigin?: string }
 
-import { HttpError, fail, Ctx } from "./http/common";
+import { HttpError, fail, idParam, makeTaskDto, me, ok, wrap, Ctx } from "./http/common";
 import { submissionsRouter } from "./http/submissions";
 import { notificationsRouter } from "./http/notifications";
 import { reportsRouter } from "./http/reports";
 import { computeWeeklyProgress, recentActivity } from "./domain/reports";
-const ok = (res: Response, data: unknown, status = 200) => res.status(status).json({ success: true, data });
-const wrap = (fn: (req: Request, res: Response) => Promise<unknown>) => (req: Request, res: Response, next: NextFunction) => { fn(req, res).catch(next); };
 
 const publicUser = (u: User) => ({ id: u.id, email: u.email, name: u.name, createdAt: u.createdAt });
 const publicSubject = (s: Subject) => ({ id: s.id, name: s.name, code: s.code, description: s.description, color: s.color, createdAt: s.createdAt });
@@ -30,14 +27,13 @@ export function createApp(opts: AppOptions) {
   const { repos, jwtSecret } = opts;
   const now = opts.now ?? (() => new Date());
   const rounds = opts.bcryptRounds ?? 12;
+  const taskDto = makeTaskDto(now);
   const app = express();
   app.use(helmet());
   app.use(cors({ origin: opts.corsOrigin ?? "http://localhost:5173", credentials: true }));
   app.use(express.json({ limit: "100kb" }));
   app.use(cookieParser());
 
-  const taskDto = (t: Task) => ({ ...t, deadlineState: deadlineState(t, now()), daysUntilDue: daysUntilDue(t.dueDate, now()), submissionStatus: submissionStatus(t) });
-  const idParam = (req: Request) => { const n = Number(req.params.id); if (!Number.isInteger(n) || n < 1) throw fail(400, "Invalid id"); return n; };
   const cookieOpts = { httpOnly: true, sameSite: "lax" as const, secure: process.env.NODE_ENV === "production", maxAge: 7 * 86400_000 };
   const issue = (res: Response, u: User) => { const token = jwt.sign({ sub: u.id }, jwtSecret, { expiresIn: "7d" }); res.cookie("token", token, cookieOpts); return token; };
 
@@ -53,7 +49,6 @@ export function createApp(opts: AppOptions) {
       (req as any).user = user; next();
     } catch (e) { next(e); }
   };
-  const me = (req: Request) => (req as any).user as User;
 
   // ---------- auth ----------
   const auth = express.Router();
