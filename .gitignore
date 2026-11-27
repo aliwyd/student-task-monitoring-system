@@ -6,3 +6,9 @@ dist/
 coverage/
 *.log.tmp
 .DS_Store
+frontend/playwright-report/
+frontend/test-results/
+frontend/.vite/
+*.tsbuildinfo
+*.db-shm
+*.db-wal

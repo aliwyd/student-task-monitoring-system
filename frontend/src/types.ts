@@ -1,0 +1,21 @@
+export type Status = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'SUBMITTED';
+export type Priority = 'LOW' | 'MEDIUM' | 'HIGH';
+export type DeadlineState = 'DONE' | 'OVERDUE' | 'DUE_SOON' | 'UPCOMING';
+export type User = { id: number; name: string; email: string; createdAt: string };
+export type Subject = { id: number; name: string; code: string | null; description: string | null; color: string; createdAt: string };
+export type Task = {
+  id: number; title: string; description: string | null; notes: string | null;
+  status: Status; priority: Priority; subjectId: number | null; dueDate: string;
+  completedAt: string | null; submittedAt: string | null; createdAt: string; updatedAt: string;
+  deadlineState: DeadlineState; daysUntilDue: number; submissionStatus: string;
+};
+export type Stats = { total: number; completed: number; pending: number; overdue: number; completionPercentage: number; byStatus: Record<Status, number> };
+export type WeeklyPoint = { weekStart: string; created: number; completed: number };
+export type Activity = { type: 'CREATED' | 'COMPLETED' | 'SUBMITTED'; taskId: number; title: string; at: string };
+export type Dashboard = { stats: Stats; upcoming: Task[]; weeklyProgress: WeeklyPoint[]; recentActivity: Activity[] };
+export type Submission = { id: number; taskId: number; taskTitle: string; dueDate: string; submittedAt: string; link: string | null; remarks: string | null; timing: 'ON_TIME' | 'LATE'; lateByHours: number };
+export type SubmissionItem = { task: Task; subjectName: string | null; subjectColor: string | null; submission: Submission | null };
+export type SubmissionStats = { submitted: number; onTime: number; late: number; notSubmitted: number };
+export type Notification = { id: number; taskId: number | null; type: 'OVERDUE' | 'DEADLINE_SOON' | 'RECENTLY_COMPLETED'; message: string; read: boolean; createdAt: string };
+export type SubjectProgress = { subjectId: number | null; name: string; color: string; total: number; completed: number; overdue: number; completionPercentage: number };
+export type Report = { stats: Stats; submissionStats: SubmissionStats; bySubject: SubjectProgress[]; weeklyProgress: WeeklyPoint[] };

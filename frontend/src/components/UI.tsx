@@ -1,0 +1,20 @@
+import { AlertCircle, Check, LoaderCircle, X } from 'lucide-react';
+import { useEffect, type ReactNode } from 'react';
+import { statusText, priorityText } from '../utils';
+import type { Priority, Status } from '../types';
+export function PageHeading({ eyebrow, title, subtitle, children }: { eyebrow?: string; title: string; subtitle?: string; children?: ReactNode }) {
+  return <div className="page-heading"><div><p className="eyebrow">{eyebrow || 'YOUR WORKSPACE'}</p><h1>{title}</h1>{subtitle && <p className="muted heading-subtitle">{subtitle}</p>}</div>{children && <div className="heading-actions">{children}</div>}</div>;
+}
+export function SectionTitle({ title, action }: { title: string; action?: ReactNode }) { return <div className="section-heading"><h2>{title}</h2>{action}</div>; }
+export function StatusPill({ status }: { status: Status }) { return <span className={`pill status-${status.toLowerCase()}`}>{statusText[status]}</span>; }
+export function PriorityPill({ priority }: { priority: Priority }) { return <span className={`pill priority-${priority.toLowerCase()}`}><span className="priority-dot"/>{priorityText[priority]}</span>; }
+export function Empty({ icon, title, subtitle, action }: { icon?: ReactNode; title: string; subtitle?: string; action?: ReactNode }) { return <div className="empty-state"><div className="empty-icon">{icon || <Check size={23}/>}</div><h3>{title}</h3>{subtitle && <p className="muted">{subtitle}</p>}{action}</div>; }
+export function Loading() { return <div className="loading"><LoaderCircle size={23} className="spin"/> Loading your workspace…</div>; }
+export function Banner({ message, onClose, kind = 'error' }: { message: string; onClose?: () => void; kind?: 'error' | 'success' }) { return <div role="alert" className={`banner banner-${kind}`}>{kind === 'error' ? <AlertCircle size={18}/> : <Check size={18}/>}<span>{message}</span>{onClose && <button className="icon-button" aria-label="Dismiss message" onClick={onClose}><X size={16}/></button>}</div>; }
+export function Modal({ title, children, onClose, width = '560px' }: { title: string; children: ReactNode; onClose: () => void; width?: string }) {
+  useEffect(() => { const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); }; window.addEventListener('keydown', esc); return () => window.removeEventListener('keydown', esc); }, [onClose]);
+  return <div className="modal-backdrop" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}><section role="dialog" aria-modal="true" aria-label={title} className="modal" style={{ maxWidth: width }}><div className="modal-header"><h2>{title}</h2><button type="button" className="icon-button" aria-label="Close dialog" onClick={onClose}><X size={20}/></button></div>{children}</section></div>;
+}
+export function Progress({ value, color = 'var(--accent)' }: { value: number; color?: string }) { return <div className="progress-track" role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100}><div style={{ width: `${Math.min(100, Math.max(0, value))}%`, background: color }} /></div>; }
+export function StatCard({ icon, label, value, detail, tone }: { icon: ReactNode; label: string; value: string | number; detail?: string; tone?: string }) { return <div className="stat-card"><div className={`stat-icon ${tone || ''}`}>{icon}</div><span className="stat-label">{label}</span><strong className="stat-value">{value}</strong>{detail && <span className="stat-detail">{detail}</span>}</div>; }
+export function Confirm({ title, message, onCancel, onConfirm, busy = false }: { title: string; message: string; onCancel: () => void; onConfirm: () => void; busy?: boolean }) { return <Modal title={title} onClose={onCancel}><div className="modal-body"><p className="muted">{message}</p><div className="form-actions"><button className="btn btn-secondary" onClick={onCancel}>Cancel</button><button disabled={busy} className="btn btn-danger" onClick={onConfirm}>{busy ? 'Deleting…' : 'Delete'}</button></div></div></Modal>; }

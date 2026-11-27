@@ -1,0 +1,19 @@
+﻿# 2026-11-27T19:19:44.4916836+08:00 step=Frontend npm install
+# command=npm install
+
+added 80 packages, and audited 81 packages in 15s
+
+9 packages are looking for funding
+  run `npm fund` for details
+
+2 moderate severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   esbuild@0.25.12 (postinstall: node install.js)
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+# exit code: 0

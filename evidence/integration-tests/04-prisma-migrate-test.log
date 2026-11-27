@@ -1,0 +1,20 @@
+﻿# 2026-11-27T19:19:31.0765757+08:00  step=prisma migrate deploy (test.db)
+# cmd: npx prisma migrate deploy
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": SQLite database "test.db" at "file:./test.db"
+
+SQLite database test.db created at file:./test.db
+
+1 migration found in prisma/migrations
+
+Applying migration `20261127111930_init`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261127111930_init/
+    └─ migration.sql
+      
+All migrations have been successfully applied.
+# exit code: 0
