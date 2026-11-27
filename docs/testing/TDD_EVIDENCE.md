@@ -111,3 +111,77 @@ Commits:
 - `c9ce23a tdd(api-auth-tasks): red - failing integration tests for auth, tasks, subjects, isolation, dashboard (app not implemented)`
 - `5fab58b tdd(api-auth-tasks): green - implement repositories, validation, auth, tasks, subjects, dashboard routes`
 - `12433a4 tdd(api-auth-tasks): refactor - remove dead code; fix TaskData null types found by tsc; behavior unchanged`
+
+
+## Notification candidates (domain)
+
+- Functions: `candidateNotifications`
+- Test file: `backend/tests/unit/notificationsDomain.test.ts`
+- Implementation: `backend/src/domain/notifications.ts`
+
+**RED** - tests first, module missing. 0 tests ran. Reason: `Error: Cannot find module '../../src/domain/notifications'`. Log: `evidence/tdd/notifications-domain-red.log`
+
+**GREEN** - minimal implementation. 8 passed (8). Log: `evidence/tdd/notifications-domain-green.log`
+
+**REFACTOR** - Typed `NotificationCandidate`; reused `DUE_SOON_DAYS`; extracted `recentlyCompleted` and a date helper. 8 passed (8). Log: `evidence/tdd/notifications-domain-refactor.log`
+
+Commits:
+
+- `298452f tdd(notifications-domain): red - failing tests for notification candidates (module not implemented)`
+- `8f25b88 tdd(notifications-domain): green - minimal candidateNotifications`
+- `c6c9865 tdd(notifications-domain): refactor - typed candidates, reuse DUE_SOON_DAYS, extracted helpers; behavior unchanged`
+
+## Report calculations (domain)
+
+- Functions: `computeSubmissionStats, computeSubjectProgress, computeWeeklyProgress, recentActivity`
+- Test file: `backend/tests/unit/reports.test.ts`
+- Implementation: `backend/src/domain/reports.ts`
+
+**RED** - tests first, module missing. 0 tests ran. Reason: `Error: Cannot find module '../../src/domain/reports'`. Log: `evidence/tdd/reports-red.log`
+
+**GREEN** - minimal implementation. 12 passed (12). Log: `evidence/tdd/reports-green.log`
+
+**REFACTOR** - Named constants (`MS_PER_DAY`, no-subject label/colour); shared `percent` and `isClosed` helpers. 12 passed (12). Log: `evidence/tdd/reports-refactor.log`
+
+Commits:
+
+- `04c6445 tdd(reports): red - failing tests for report calculations (module not implemented)`
+- `7abd6a8 tdd(reports): green - minimal report calculations`
+- `781a76e tdd(reports): refactor - named constants, shared percent/isClosed helpers; behavior unchanged`
+
+## CSV export (domain)
+
+- Functions: `toCsv`
+- Test file: `backend/tests/unit/csv.test.ts`
+- Implementation: `backend/src/domain/csv.ts`
+
+**RED** - tests first, module missing. 0 tests ran. Reason: `Error: Cannot find module '../../src/domain/csv'`. Log: `evidence/tdd/csv-export-red.log`
+
+**GREEN** - minimal implementation. 7 passed (7). Log: `evidence/tdd/csv-export-green.log`
+
+**REFACTOR** - Typed `CsvCell`; named regex constants; split out `formatCell`. 7 passed (7). Log: `evidence/tdd/csv-export-refactor.log`
+
+Commits:
+
+- `b62c09e tdd(csv-export): red - failing tests for CSV serialisation (module not implemented)`
+- `c8ecdde tdd(csv-export): green - minimal toCsv`
+- `5c3d7ad tdd(csv-export): refactor - typed cells, named regex constants, split formatCell; behavior unchanged`
+
+## API part 2: submissions, notifications, reports/CSV, profile/password, dashboard extras
+
+- Test file: `backend/tests/integration/api2.test.ts`
+- Implementation: `backend/src/http/*.ts`, `backend/src/app.ts`, `backend/src/repositories/`
+
+**RED** - tests first. This RED ran the whole suite against an app without these routes, so it failed on real assertions: 22 failed (22). Log: `evidence/tdd/api-part2-red.log`
+
+**GREEN** - 22 passed (22). Log: `evidence/tdd/api-part2-green.log`
+
+**REFACTOR** - removed helper functions duplicated between `app.ts` and `http/common.ts`. 22 passed (22). Log: `evidence/tdd/api-part2-refactor.log`
+
+Caveat: these runs used the in-memory repositories. The Prisma/SQLite run happens through `scripts/verify-on-windows.ps1` and its results are not part of this evidence yet.
+
+Commits:
+
+- `a2d2a3d tdd(api-part2): red - failing integration tests for submissions, notifications, reports, profile, dashboard extras (routes not implemented)`
+- `6d80baf tdd(api-part2): green - implement submissions, notifications, reports/CSV, profile/password, dashboard extras`
+- `be5f85d tdd(api-part2): refactor - app.ts reuses http/common helpers (removed duplicates); behavior unchanged`
