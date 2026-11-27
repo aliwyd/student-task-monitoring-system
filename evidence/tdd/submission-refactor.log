@@ -1,0 +1,13 @@
+# 2026-11-27T10:28:10Z feature=submission stage=refactor
+# cmd: npx vitest run tests/unit/submission.test.ts
+
+ RUN  v5.1.2 /home/claude/student-task-monitoring-system/backend
+
+ ✓ tests/unit/submission.test.ts (7 tests) 6ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  10:28:10
+   Duration  224ms (transform 42%, import 38%, tests 12%, worker 8%)
+
+# exit code: 0
